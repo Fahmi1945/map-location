@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="public/favicon.png" type="image/png">
+  <title>Aplikasi Peta Cerita</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- <link rel="stylesheet" href="styles/styles.css"> -->
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    // Konfigurasi sederhana untuk font Inter
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-gray-100 font-sans antialiased">
+
+  <nav class="bg-gray-900 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <div class="flex-shrink-0">
+          <a href="#/home" class="text-2xl font-bold">PetaCerita</a>
+        </div>
+        
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-4">
+            <a href="#/home" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Home</a>
+            
+            <div id="guest-nav" class="flex items-center space-x-4">
+              <a href="#/login" class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Login</a>
+            </div>
+            
+            <div id="user-nav" class="hidden items-center space-x-4">
+              <a href="#/add-data" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">Tambah Data</a>
+              <span id="user-name-display" class="font-medium text-blue-300"></span>
+              <button id="logout-button" class="bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md text-sm font-medium">Logout</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="-mr-2 flex md:hidden">
+          <button type="button" id="mobile-menu-button" class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+            <span class="sr-only">Buka menu</span>
+            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="md:hidden hidden">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="#/home" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Home</a>
+        
+        <div id="guest-nav-mobile" class="space-y-1">
+          <a href="#/login" class="block bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Login</a>
+        </div>
+        
+        <div id="user-nav-mobile" class="hidden space-y-1 border-t border-gray-700 pt-4 mt-4">
+          <div class="flex items-center px-3">
+             <span id="user-name-display-mobile" class="font-medium text-blue-300"></span>
+          </div>
+          <a href="#/add-data" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">Tambah Data</a>
+          <button id="logout-button-mobile" class="w-full text-left block bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md text-base font-medium">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content" class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    </main>
+
+  <footer class="bg-gray-800 text-gray-400 text-center p-4 mt-8">
+    <p>Copyright &copy; 2025 - Bootcamp Dicoding</p>
+  </footer>
+
+  </body>
+</html>

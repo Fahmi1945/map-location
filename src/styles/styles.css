@@ -1,0 +1,27 @@
+/* File ini sekarang JAUH lebih kecil.
+  Tailwind menangani 99% styling.
+  Kita HANYA menyimpan style untuk library eksternal (Leaflet).
+*/
+
+/* Kriteria 4: RWD untuk Peta Leaflet */
+.map-container,
+.map-container-add {
+  height: 400px; /* Tinggi default di mobile */
+  width: 100%;
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid #D1D5DB; /* border-gray-300 */
+}
+
+/* Di layar tablet (md) ke atas, buat peta lebih tinggi */
+@media (min-width: 768px) {
+  .map-container,
+  .map-container-add {
+    height: 500px;
+  }
+}
+
+/* Z-index fix untuk Leaflet */
+.leaflet-popup-pane,
+.leaflet-control {
+  z-index: 40; /* Pastikan di atas elemen Tailwind (z-50) */
+}
