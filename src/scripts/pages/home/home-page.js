@@ -22,14 +22,16 @@ const HomePage = {
   async render() {
     return `
       <section class="home-page px-4">
-        <h2 class="text-3xl font-bold text-gray-900 my-6 text-center">Peta Lokasi Cerita</h2>
+        <!-- PERUBAHAN: Ubah text-gray-900 menjadi text-white -->
+        <h2 class="text-3xl font-bold text-white my-6 text-center">Peta Lokasi Cerita</h2>
         
         <div id="map" class="map-container shadow-lg rounded-lg"></div>
         
-        <h2 class="text-3xl font-bold text-gray-900 my-8 text-center">Daftar Cerita</h2>
+        <!-- PERUBAHAN: Ubah text-gray-900 menjadi text-white -->
+        <h2 class="text-3xl font-bold text-white my-8 text-center">Daftar Cerita</h2>
         
         <div id="data-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <p class="loading-indicator col-span-full text-center text-gray-600 text-xl">
+          <p class="loading-indicator col-span-full text-center text-gray-300 text-xl">
             Memuat data...
           </p>
         </div>
@@ -118,15 +120,25 @@ const HomePage = {
         storyItem.dataset.lat = story.lat;
         storyItem.dataset.lon = story.lon;
 
+        const formattedDate = new Date(story.createdAt).toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        });
+
         storyItem.innerHTML = `
           <img src="${story.photoUrl}" alt="Cerita dari ${story.name}" class="w-full h-56 object-cover">
           <div class="p-5">
             <h3 class="font-bold text-2xl mb-2 text-gray-900">${story.name}</h3>
+            
+            <p class="text-gray-500 text-sm mb-3 font-medium">${formattedDate}</p>
+            
             <p class="text-gray-700 text-base">
               ${story.description.substring(0, 100)}...
             </p>
           </div>
         `;
+
         listContainer.appendChild(storyItem);
 
         // --- BUAT MARKER PETA ---

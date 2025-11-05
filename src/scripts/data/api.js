@@ -91,6 +91,30 @@ class ApiSource {
     }
   }
 
+  static async register({ name, email, password }) {
+    try {
+      const response = await fetch(`${CONFIG.BASE_URL}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const responseJson = await response.json();
+
+      if (responseJson.error) {
+        throw new Error(responseJson.message);
+      }
+
+      // Jika sukses, kembalikan pesan
+      return responseJson;
+
+    } catch (error) {
+      console.error('Gagal register:', error);
+      throw error; // Lempar error agar ditangkap Presenter
+    }
+  }
   // ... (fungsi lain nanti) ...
 }
 

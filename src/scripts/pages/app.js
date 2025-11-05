@@ -4,7 +4,7 @@ import routes from '../routes/routes.js';
 class App {
   constructor({ content }) {
     this._content = content;
-    
+
     // Inisialisasi logika UI (Navbar, Logout, dll)
     this._checkAuthStatus();
     this._initLogoutButtons();
@@ -16,11 +16,11 @@ class App {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     const icons = mobileMenuButton.querySelectorAll('svg');
-    
+
     mobileMenuButton.addEventListener('click', () => {
       // Toggle (ganti) class 'hidden' pada menu
       mobileMenu.classList.toggle('hidden');
-      
+
       // Ganti ikon hamburger/X
       icons.forEach(icon => icon.classList.toggle('hidden'));
     });
@@ -48,7 +48,7 @@ class App {
       guestNavs.forEach(nav => nav.style.display = 'flex');
       // Sesuaikan display untuk mobile
       document.getElementById('guest-nav-mobile').style.display = 'block';
-      
+
       userNavs.forEach(nav => nav.style.display = 'none');
     }
   }
@@ -56,14 +56,14 @@ class App {
   _initLogoutButtons() {
     // Ambil KEDUA tombol logout
     const logoutButtons = document.querySelectorAll('#logout-button, #logout-button-mobile');
-    
+
     logoutButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
-        
+
         sessionStorage.removeItem('loginToken');
         sessionStorage.removeItem('userName');
-        
+
         this._checkAuthStatus(); // Update UI Navbar
         window.location.hash = '#/login'; // Redirect ke login
       });
@@ -71,34 +71,35 @@ class App {
   }
 
   async _renderPage() {
-    // Transisi Halaman (Kriteria 1)
-    // 1. Tambahkan kelas fade-out
-    this._content.classList.add('opacity-0', 'transition-opacity', 'duration-300');
-    
-    // 2. Tunggu animasi selesai
-    await new Promise(resolve => setTimeout(resolve, 300)); 
-
     const url = UrlParser.parseActiveUrlWithCombiner();
     const page = routes[url] ? routes[url] : routes['/'];
-    
-    // 3. Ganti konten HTML
-    this._content.innerHTML = await page.render();
-    
-    // 4. Hapus kelas fade-out (memicu fade-in)
-    // Kita gunakan requestAnimationFrame untuk memastikan 'render' selesai
-    requestAnimationFrame(() => {
-      this._content.classList.remove('opacity-0');
+
+    // --- PERBAIKAN: VIEW TRANSITION API ---
+
+    // 1. Fallback untuk browser yang tidak mendukung
+    if (!document.startViewTransition) {
+      this._content.innerHTML = await page.render();
+      if (page.afterRender) {
+        await page.afterRender();
+      }
+      
+      this._checkAuthStatus();
+      this._closeMobileMenu();
+      return;
+    }
+
+    document.startViewTransition(async () => {
+      this._content.innerHTML = await page.render();
+      if (page.afterRender) {
+        await page.afterRender();
+      }
     });
 
-    if (page.afterRender) {
-      await page.afterRender();
-    }
-    
-    // Setiap pindah halaman, cek status login lagi
-    // (PENTING: untuk update UI setelah redirect dari Login/Add Data)
     this._checkAuthStatus();
-    
-    // Setiap pindah halaman, tutup menu mobile
+    this._closeMobileMenu();
+  }
+
+  _closeMobileMenu() {
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const icons = mobileMenuButton.querySelectorAll('svg');
