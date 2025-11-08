@@ -48,6 +48,7 @@ const HomePage = {
       view: this,
       model: ApiSource,
     });
+    this._addListClickHandlers();
   },
 
   // === Fungsi yang Dipanggil oleh Presenter ===
@@ -127,18 +128,17 @@ const HomePage = {
         });
 
         storyItem.innerHTML = `
-          <img src="${story.photoUrl}" alt="Cerita dari ${story.name}" class="w-full h-56 object-cover">
-          <div class="p-5">
-            <h3 class="font-bold text-2xl mb-2 text-gray-900">${story.name}</h3>
-            
-            <p class="text-gray-500 text-sm mb-3 font-medium">${formattedDate}</p>
-            
-            <p class="text-gray-700 text-base">
-              ${story.description.substring(0, 100)}...
-            </p>
-          </div>
+        <img src="${story.photoUrl}" alt="Cerita dari ${story.name}" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-2xl mb-2 text-gray-900">
+            <span class="hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded">
+              ${story.name}
+            </span>
+          </h3>
+          <p class="text-gray-500 text-sm mb-3 font-medium">${formattedDate}</p>
+          <p class="text-gray-700 text-base">${story.description.substring(0, 100)}...</p>
+        </div>
         `;
-
         listContainer.appendChild(storyItem);
 
         // --- BUAT MARKER PETA ---
@@ -150,7 +150,7 @@ const HomePage = {
       }
     });
 
-    this._addListClickHandlers();
+
   },
 
   _addListClickHandlers() {
@@ -159,12 +159,11 @@ const HomePage = {
       const clickedItem = event.target.closest('.story-item');
       if (clickedItem) {
         const id = clickedItem.dataset.id;
-        const lat = clickedItem.dataset.lat;
-        const lon = clickedItem.dataset.lon;
-        this._focusMapToMarker(id, lat, lon);
+        window.location.hash = `#/detail/${id}`;
       }
     });
   },
+
 
   _focusMapToMarker(id, lat, lon) {
     // Hapus highlight (Tailwind classes) dari semua item

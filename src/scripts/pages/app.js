@@ -72,7 +72,9 @@ class App {
 
   async _renderPage() {
     const url = UrlParser.parseActiveUrlWithCombiner();
+    console.log('Mencoba mencocokkan rute:', url);
     const page = routes[url] ? routes[url] : routes['/'];
+    console.log('Halaman yang di-render:', page.name);
 
     // --- PERBAIKAN: VIEW TRANSITION API ---
 
@@ -82,7 +84,7 @@ class App {
       if (page.afterRender) {
         await page.afterRender();
       }
-      
+
       this._checkAuthStatus();
       this._closeMobileMenu();
       return;
@@ -93,10 +95,9 @@ class App {
       if (page.afterRender) {
         await page.afterRender();
       }
+      this._checkAuthStatus();
+      this._closeMobileMenu();
     });
-
-    this._checkAuthStatus();
-    this._closeMobileMenu();
   }
 
   _closeMobileMenu() {

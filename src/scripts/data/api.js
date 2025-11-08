@@ -115,7 +115,41 @@ class ApiSource {
       throw error; // Lempar error agar ditangkap Presenter
     }
   }
-  // ... (fungsi lain nanti) ...
+  static async getStoryById(id, token) {
+    try {
+      const activeToken = token ? token : CONFIG.GUEST_TOKEN;
+
+      const response = await fetch(`${CONFIG.BASE_URL}/stories/${id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${activeToken}`,
+        },
+      });
+
+      // ✅ CEK STATUS RESPONSE LEBIH DULU
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+      }
+
+      const responseJson = await response.json();
+
+      // ✅ CEK STRUKTUR RESPONSE
+      if (responseJson.error) {
+        throw new Error(responseJson.message || 'Unknown error from API');
+      }
+
+      if (!responseJson.story) {
+        throw new Error('Format data tidak sesuai: property "story" tidak ditemukan dalam response');
+      }
+
+      console.log('Story berhasil diambil:', responseJson.story);
+      return responseJson.story;
+
+    } catch (error) {
+      console.error(`Gagal mengambil detail cerita: ${error.message}`);
+      throw error;
+    }
+  }
 }
 
 export default ApiSource;

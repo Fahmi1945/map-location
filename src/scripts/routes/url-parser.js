@@ -1,14 +1,14 @@
 const UrlParser = {
   // Fungsi ini mengambil URL hash dan mengubahnya menjadi path
   parseActiveUrlWithCombiner() {
-    const url = window.location.hash.slice(1).toLowerCase();
+    const url = window.location.hash.slice(1);
     const splittedUrl = this._urlSplitter(url);
     return this._urlCombiner(splittedUrl);
   },
 
   // Fungsi ini mengambil URL hash TANPA menggabungkannya
   parseActiveUrlWithoutCombiner() {
-    const url = window.location.hash.slice(1).toLowerCase();
+    const url = window.location.hash.slice(1);
     return this._urlSplitter(url);
   },
 
@@ -16,11 +16,11 @@ const UrlParser = {
   // Contoh: '#/home' -> ['home']
   // Contoh: '#/detail/123' -> ['detail', '123']
   _urlSplitter(url) {
-    const urlsSplits = url.split('/');
+    const urlsSplits = url.split('/').filter(part => part !== '');
     return {
-      resource: urlsSplits[1] || null,
-      id: urlsSplits[2] || null,
-      verb: urlsSplits[3] || null,
+      resource: urlsSplits[0] || null,
+      id: urlsSplits[1] || null,
+      verb: urlsSplits[2] || null,
     };
   },
 

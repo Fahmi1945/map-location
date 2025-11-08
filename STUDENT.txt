@@ -1,2 +1,1 @@
-APP_URL=<url_aplikasi>
-MAP_SERVICE_API_KEY=<api_key>
+URL hasil deployment: "https://frolicking-boba-0d5146.netlify.app/"
