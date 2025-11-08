@@ -16,7 +16,19 @@ module.exports = merge(common, {
     ],
   },
   devServer: {
-    static: path.resolve(__dirname, 'dist'),
+    static: [
+      {
+        // Ini menyajikan 'manifest.webmanifest' dari 'src/'
+        directory: path.join(__dirname, 'src/'),
+        publicPath: '/',
+      },
+      {
+        // Ini menyajikan 'logo.png' dan 'icons' dari 'src/public/'
+        directory: path.join(__dirname, 'src/public/'),
+        publicPath: '/',
+      },
+    ],
+    open: true,
     port: 9000,
     client: {
       overlay: {

@@ -1,0 +1,48 @@
+{
+  "name": "PetaCerita - Aplikasi Peta Cerita Anda",
+  "short_name": "PetaCerita",
+  "description": "Bagikan dan lihat cerita dari berbagai lokasi di seluruh dunia dengan PetaCerita.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#1e3a8a",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "public/icons/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "public/icons/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "public/images/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tampilan Desktop PetaCerita"
+    },
+    {
+      "src": "public/images/screenshot-mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tampilan Mobile PetaCerita"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tambah Cerita Baru",
+      "short_name": "Tambah",
+      "description": "Buka halaman untuk menambah cerita baru",
+      "url": "/index.html#/add-data",
+      "icons": [{ "src": "public/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

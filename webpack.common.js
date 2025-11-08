@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -27,6 +28,31 @@ module.exports = {
         {
           from: path.resolve(__dirname, 'src/public/'),
           to: path.resolve(__dirname, 'dist/'),
+        },
+      ],
+    }),
+    new GenerateSW({
+      swDest: 'service-worker.js', // Nama file keluaran
+      clientsClaim: true,
+      skipWaiting: true,
+      navigateFallback: '/index.html',
+      // Ini akan me-runtime-cache font Google (seperti yang kita coba manual tadi)
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/fonts\.googleapis\.com/,
+          handler: 'StaleWhileRevalidate',
+          options: { cacheName: 'google-fonts-stylesheets' },
+        },
+        {
+          urlPattern: /^https:\/\/ fonts\.gstatic\.com/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-webfonts',
+            expiration: {
+              maxEntries: 30,
+              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 tahun
+            },
+          },
         },
       ],
     }),
