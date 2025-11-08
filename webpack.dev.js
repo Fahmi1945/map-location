@@ -16,20 +16,17 @@ module.exports = merge(common, {
     ],
   },
   devServer: {
-    static: [
-      {
-        // Ini menyajikan 'manifest.webmanifest' dari 'src/'
-        directory: path.join(__dirname, 'src/'),
-        publicPath: '/',
-      },
-      {
-        // Ini menyajikan 'logo.png' dan 'icons' dari 'src/public/'
-        directory: path.join(__dirname, 'src/public/'),
-        publicPath: '/',
-      },
-    ],
+    // ⬇️ --- PERBAIKAN: Sederhanakan 'static' --- ⬇️
+    // Sajikan SEMUANYA dari folder 'src'
+    // 'src/manifest.webmanifest' -> /manifest.webmanifest
+    // 'src/public/images/logo.png' -> /public/icons/logo.png
+    static: {
+      directory: path.join(__dirname, 'src'),
+    },
+    // ⬆️ --- SELESAI PERBAIKAN --- ⬆️
+
     open: true,
-    port: 9000,
+    port: 9000, // Port Anda sudah benar
     client: {
       overlay: {
         errors: true,

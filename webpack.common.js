@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { GenerateSW } = require('workbox-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin'); // 1. GANTI INI
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -27,34 +27,19 @@ module.exports = {
       patterns: [
         {
           from: path.resolve(__dirname, 'src/public/'),
+          to: path.resolve(__dirname, 'dist/public/'),
+        },
+        {
+          from: path.resolve(__dirname, 'src/manifest.webmanifest'),
           to: path.resolve(__dirname, 'dist/'),
         },
       ],
     }),
-    new GenerateSW({
-      swDest: 'service-worker.js', // Nama file keluaran
-      clientsClaim: true,
-      skipWaiting: true,
-      navigateFallback: '/index.html',
-      // Ini akan me-runtime-cache font Google (seperti yang kita coba manual tadi)
-      runtimeCaching: [
-        {
-          urlPattern: /^https:\/\/fonts\.googleapis\.com/,
-          handler: 'StaleWhileRevalidate',
-          options: { cacheName: 'google-fonts-stylesheets' },
-        },
-        {
-          urlPattern: /^https:\/\/ fonts\.gstatic\.com/,
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'google-fonts-webfonts',
-            expiration: {
-              maxEntries: 30,
-              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 tahun
-            },
-          },
-        },
-      ],
+    
+    // 2. GANTI DARI 'GenerateSW' MENJADI 'InjectManifest'
+    new InjectManifest({
+      swSrc: path.resolve(__dirname, 'src/service-worker.js'), // File sumber SW kita
+      swDest: 'service-worker.js', // File keluaran di 'dist/'
     }),
   ],
 };

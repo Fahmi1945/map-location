@@ -1,6 +1,7 @@
 import 'regenerator-runtime'; // Untuk async/await
 import '../styles/styles.css'; // Import CSS
 import App from './pages/app.js';
+import SyncHelper from './utils/sync-helper.js';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -21,6 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
     content: document.querySelector('#main-content'), // Kirim 'wadah' <main> ke App
   });
 
-  // Mulai aplikasi
   app.start();
+  SyncHelper.syncOutbox();
+});
+window.addEventListener('online', () => {
+  console.log('Koneksi kembali online! Mencoba sinkronisasi...');
+  SyncHelper.syncOutbox();
 });
