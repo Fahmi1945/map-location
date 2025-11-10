@@ -1,27 +1,24 @@
 import UrlParser from '../routes/url-parser.js';
 import routes from '../routes/routes.js';
+import PushNotificationHelper from '../utils/push-notification.js';
 
 class App {
   constructor({ content }) {
     this._content = content;
 
-    // Inisialisasi logika UI (Navbar, Logout, dll)
     this._checkAuthStatus();
     this._initLogoutButtons();
-    this._initMobileMenuButton(); // 1. TAMBAHKAN INI
+    this._initMobileMenuButton(); 
   }
 
-  // 2. TAMBAHKAN FUNGSI BARU INI
   _initMobileMenuButton() {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     const icons = mobileMenuButton.querySelectorAll('svg');
 
     mobileMenuButton.addEventListener('click', () => {
-      // Toggle (ganti) class 'hidden' pada menu
       mobileMenu.classList.toggle('hidden');
 
-      // Ganti ikon hamburger/X
       icons.forEach(icon => icon.classList.toggle('hidden'));
     });
   }
@@ -31,23 +28,21 @@ class App {
     const token = sessionStorage.getItem('loginToken');
     const userName = sessionStorage.getItem('userName');
 
-    // Ambil SEMUA elemen navigasi (Desktop & Mobile)
     const guestNavs = document.querySelectorAll('#guest-nav, #guest-nav-mobile');
     const userNavs = document.querySelectorAll('#user-nav, #user-nav-mobile');
     const userNameDisplays = document.querySelectorAll('#user-name-display, #user-name-display-mobile');
 
     if (token && userName) {
-      // Jika login, tampilkan navigasi user, sembunyikan guest
       guestNavs.forEach(nav => nav.style.display = 'none');
-      userNavs.forEach(nav => nav.style.display = 'flex'); // 'flex' untuk desktop, 'block' untuk mobile
-      // Sesuaikan display untuk mobile
+      userNavs.forEach(nav => nav.style.display = 'flex'); 
       document.getElementById('user-nav-mobile').style.display = 'block';
 
       userNameDisplays.forEach(display => display.textContent = userName);
+      PushNotificationHelper.init({
+        button: document.getElementById('notification-toggle-button'),
+      });
     } else {
-      // Jika guest, tampilkan navigasi guest, sembunyikan user
       guestNavs.forEach(nav => nav.style.display = 'flex');
-      // Sesuaikan display untuk mobile
       document.getElementById('guest-nav-mobile').style.display = 'block';
 
       userNavs.forEach(nav => nav.style.display = 'none');
@@ -55,7 +50,6 @@ class App {
   }
 
   _initLogoutButtons() {
-    // Ambil KEDUA tombol logout
     const logoutButtons = document.querySelectorAll('#logout-button, #logout-button-mobile');
 
     logoutButtons.forEach(button => {
@@ -65,8 +59,8 @@ class App {
         sessionStorage.removeItem('loginToken');
         sessionStorage.removeItem('userName');
 
-        this._checkAuthStatus(); // Update UI Navbar
-        window.location.hash = '#/login'; // Redirect ke login
+        this._checkAuthStatus();
+        window.location.hash = '#/login';
       });
     });
   }
@@ -77,9 +71,6 @@ class App {
     const page = routes[url] ? routes[url] : routes['/'];
     console.log('Halaman yang di-render:', page.name);
 
-    // --- PERBAIKAN: VIEW TRANSITION API ---
-
-    // 1. Fallback untuk browser yang tidak mendukung
     if (!document.startViewTransition) {
       this._content.innerHTML = await page.render();
       if (page.afterRender) {
@@ -108,9 +99,8 @@ class App {
 
     if (!mobileMenu.classList.contains('hidden')) {
       mobileMenu.classList.add('hidden');
-      // Reset ikon hamburger
-      icons[0].classList.remove('hidden'); // Tampilkan hamburger
-      icons[1].classList.add('hidden'); // Sembunyikan 'X'
+      icons[0].classList.remove('hidden');
+      icons[1].classList.add('hidden');
     }
   }
 

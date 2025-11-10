@@ -29,8 +29,8 @@ const SyncHelper = {
                 await ApiSource.addNewStory({
                     description,
                     photo,
-                    lat: parseFloat(latFromDb), // Pastikan ini Angka
-                    lon: parseFloat(lonFromDb), // Pastikan ini Angka
+                    lat: parseFloat(latFromDb), 
+                    lon: parseFloat(lonFromDb), 
                     token,
                 });
 
