@@ -1,4 +1,5 @@
 import CONFIG from '../config.js';
+import ApiSource from '../data/api.js';
 
 const urlBase64ToUint8Array = (base64String) => {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -55,9 +56,20 @@ const PushNotificationHelper = {
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.getSubscription();
 
+    // Ambil token login
+    const token = sessionStorage.getItem('loginToken');
+    if (!token) {
+      console.error('Harus login untuk subscribe notifikasi.');
+      return;
+    }
+
     if (subscription) {
       console.log('Sudah subscribe. Melakukan unsubscribe...');
-      await this._unsubscribePush(subscription);
+      await ApiSource.unsubscribeFromNotifications(subscription.endpoint, token);
+      await subscription.unsubscribe();
+      console.log('Berhasil unsubscribe.');
+      this._updateToggleButton(false);
+
     } else {
       console.log('Melakukan subscribe...');
       try {
@@ -65,23 +77,14 @@ const PushNotificationHelper = {
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(CONFIG.VAPID_PUBLIC_KEY),
         });
-
-        console.log('Berhasil subscribe:', newSubscription);
+        console.log('Mengirim subscription ke server...');
+        await ApiSource.subscribeToNotifications(newSubscription, token);
+        console.log('Berhasil subscribe dan mengirim ke server.');
 
         this._updateToggleButton(true);
       } catch (error) {
         console.error('Gagal subscribe:', error.message);
       }
-    }
-  },
-
-  async _unsubscribePush(subscription) {
-    try {
-      await subscription.unsubscribe();
-      console.log('Berhasil unsubscribe.');
-      this._updateToggleButton(false);
-    } catch (error) {
-      console.error('Gagal unsubscribe:', error.message);
     }
   },
 

@@ -65,13 +65,10 @@ class ApiSource {
       const response = await fetch(`${CONFIG.BASE_URL}/stories`, {
         method: 'POST',
         headers: {
-          // 2. Gunakan Login Token untuk otorisasi
           'Authorization': `Bearer ${token}`,
-          // 3. 'Content-Type' TIDAK PERLU di-set, 
-          //    browser akan otomatis mengaturnya (termasuk 'boundary') 
-          //    saat menggunakan FormData.
+
         },
-        body: formData, // 4. Kirim formData sebagai body
+        body: formData,
       });
 
       const responseJson = await response.json();
@@ -80,12 +77,11 @@ class ApiSource {
         throw new Error(responseJson.message);
       }
 
-      // Jika sukses, API akan mengembalikan pesan sukses
       return responseJson;
 
     } catch (error) {
       console.error('Gagal menambah cerita baru:', error);
-      throw error; // Lempar error agar ditangkap Presenter
+      throw error;
     }
   }
 
@@ -124,14 +120,12 @@ class ApiSource {
         },
       });
 
-      // ✅ CEK STATUS RESPONSE LEBIH DULU
       if (!response.ok) {
         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
       }
 
       const responseJson = await response.json();
 
-      // ✅ CEK STRUKTUR RESPONSE
       if (responseJson.error) {
         throw new Error(responseJson.message || 'Unknown error from API');
       }
@@ -145,6 +139,77 @@ class ApiSource {
 
     } catch (error) {
       console.error(`Gagal mengambil detail cerita: ${error.message}`);
+      throw error;
+    }
+  }
+  /**
+   * Mengirim data subscription ke server
+   * @param {PushSubscription} subscription - Objek subscription dari browser
+   * @param {string} token - Token login pengguna
+   */
+  stati
+  static async subscribeToNotifications(subscription, token) {
+    try {
+      // ⬇️ --- PERBAIKAN DIMULAI DI SINI --- ⬇️
+
+      // 1. Ubah PushSubscription menjadi objek JSON standar
+      const subscriptionJson = subscription.toJSON();
+
+      // 2. Buat payload BARU yang hanya berisi apa yang dibutuhkan server
+      //    Kita membuang 'expirationTime'
+      const bodyPayload = {
+        endpoint: subscriptionJson.endpoint,
+        keys: subscriptionJson.keys,
+      };
+
+      // GANTI '/notifications/subscribe' DENGAN ENDPOINT YANG BENAR DARI DICODING
+      const response = await fetch(`${CONFIG.BASE_URL}/notifications/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        // 3. Kirim payload yang sudah "dibersihkan"
+        body: JSON.stringify(bodyPayload),
+      });
+
+      const responseJson = await response.json();
+      if (responseJson.error) {
+        throw new Error(responseJson.message);
+      }
+      return responseJson;
+
+    } catch (error) {
+      console.error('Gagal mengirim subscription ke server:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Memberi tahu server untuk berhenti mengirim notifikasi
+   * @param {string} subscriptionEndpoint - Endpoint unik dari obj subscription
+   * @param {string} token - Token login pengguna
+   */
+  static async unsubscribeFromNotifications(subscriptionEndpoint, token) {
+    try {
+      // GANTI '/notifications/unsubscribe' DENGAN ENDPOINT YANG BENAR DARI DICODING
+      const response = await fetch(`${CONFIG.BASE_URL}/notifications/subscribe`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ endpoint: subscriptionEndpoint }),
+      });
+
+      const responseJson = await response.json();
+      if (responseJson.error) {
+        throw new Error(responseJson.message);
+      }
+      return responseJson;
+
+    } catch (error) {
+      console.error('Gagal mengirim unsubscribe ke server:', error.message);
       throw error;
     }
   }
