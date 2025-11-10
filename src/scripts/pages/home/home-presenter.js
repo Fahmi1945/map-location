@@ -1,6 +1,6 @@
 class HomePresenter {
     // PERBAIKAN 1: Terima 'view' dan 'model' sebagai object
-    constructor({ view, model }) { 
+    constructor({ view, model }) {
         this._view = view;
         this._model = model;
 
@@ -9,18 +9,23 @@ class HomePresenter {
 
     async _init() {
         try {
-            this._view.showLoading();
-            const stories = await this._model.getAllStories();
-            
-            // PERBAIKAN 2: Hapus panggilan ke 'showMapMarkers'
-            // 'showStories' sudah menangani list DAN marker
-            this._view.showStories(stories);
+            const token = sessionStorage.getItem('loginToken');
 
+            // 2. Jika tidak ada token, jangan panggil API
+            if (!token) {
+                this._view.showLoginMessage(); // Panggil fungsi View baru
+                this._view.hideLoading(); // Sembunyikan loading
+                return;
+            }
+
+            // 3. Jika ada token, ambil data
+            const stories = await this._model.getAllStories(token);
+            this._view.showStories(stories);
         } catch (error) {
             this._view.showError(error.message);
         } finally {
             // Panggilan ini sekarang akan BEKERJA
-            this._view.hideLoading(); 
+            this._view.hideLoading();
         }
     }
 }

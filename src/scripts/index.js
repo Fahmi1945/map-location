@@ -19,9 +19,8 @@ if ('serviceWorker' in navigator) {
 document.addEventListener('DOMContentLoaded', () => {
   // Pindahkan kode inisialisasi App ke DALAM listener ini
   const app = new App({
-    content: document.querySelector('#main-content'), // Kirim 'wadah' <main> ke App
+    content: document.querySelector('#main-content'),
   });
-
   app.start();
   SyncHelper.syncOutbox();
 });

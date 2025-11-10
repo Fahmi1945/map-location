@@ -5,7 +5,6 @@ import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-// 2. Import Presenter & Model
 import HomePresenter from './home-presenter.js';
 import ApiSource from '../../data/api.js';
 
@@ -22,13 +21,12 @@ const HomePage = {
   async render() {
     return `
       <section class="home-page px-4">
-        <!-- PERUBAHAN: Ubah text-gray-900 menjadi text-white -->
-        <h2 class="text-3xl font-bold text-white my-6 text-center">Peta Lokasi Cerita</h2>
+
+        <h2 class="page-title-home text-3xl font-bold text-white my-6 text-center">Peta Lokasi Cerita</h2>
         
         <div id="map" class="map-container shadow-lg rounded-lg"></div>
         
-        <!-- PERUBAHAN: Ubah text-gray-900 menjadi text-white -->
-        <h2 class="text-3xl font-bold text-white my-8 text-center">Daftar Cerita</h2>
+        <h2 class="page-title-home text-3xl font-bold text-white my-8 text-center">Daftar Cerita</h2>
         
         <div id="data-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <p class="loading-indicator col-span-full text-center text-gray-300 text-xl">
@@ -98,6 +96,10 @@ const HomePage = {
   },
 
   showStories(stories) {
+
+    document.getElementById('map').style.display = 'block';
+    document.querySelectorAll('.page-title-home').forEach(title => title.style.display = 'block');
+
     this._initializeMap();
     const listContainer = document.querySelector('#data-list-container');
     if (!listContainer) return;
@@ -185,6 +187,27 @@ const HomePage = {
       this._markers[id].openPopup();
     }
   },
+  showLoginMessage() {
+    const listContainer = document.querySelector('#data-list-container');
+    if (listContainer) {
+      listContainer.innerHTML = `
+        <div class="col-span-full text-center p-8 bg-white shadow-lg rounded-lg">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Anda Belum Login</h2>
+          <p class="text-gray-600 mb-6">Silakan login terlebih dahulu untuk melihat daftar cerita.</p>
+          <a href="#/login" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5">
+            Pergi ke Halaman Login
+          </a>
+        </div>
+      `;
+    }
+
+    const mapContainer = document.getElementById('map');
+    if (mapContainer) {
+      mapContainer.style.display = 'none';
+    }
+    document.querySelectorAll('.page-title-home').forEach(title => title.style.display = 'none');
+  },
 };
+
 
 export default HomePage;

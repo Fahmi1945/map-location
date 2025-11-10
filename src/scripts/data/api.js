@@ -1,15 +1,13 @@
-// 1. PASTIKAN ANDA MENG-IMPORT CONFIG
 import CONFIG from '../config.js';
 
 class ApiSource {
-  static async getAllStories() {
+  static async getAllStories(token) {
     try {
       // 2. PASTIKAN FETCH ANDA MEMILIKI 'headers'
       const response = await fetch(`${CONFIG.BASE_URL}/stories`, {
         method: 'GET',
         headers: {
-          // 3. INI BARIS PALING KRUSIAL
-          'Authorization': `Bearer ${CONFIG.GUEST_TOKEN}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
 

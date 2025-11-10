@@ -27,6 +27,7 @@ class App {
   }
 
   _checkAuthStatus() {
+    console.log(sessionStorage.getItem('loginToken'));
     const token = sessionStorage.getItem('loginToken');
     const userName = sessionStorage.getItem('userName');
 
